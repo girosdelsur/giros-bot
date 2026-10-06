@@ -10,7 +10,7 @@ import { CORRIDORS, STORY_SETS, setForWeekday, buildStory } from "./templates.mj
 import { buildFeed, feedForWeekday, feedCaption } from "./feed.mjs";
 import { PHOTOS } from "./photos.mjs";
 import { renderPage, closeBrowser } from "./render.mjs";
-import { createPost, deletePost } from "./metricool.mjs";
+import { createPost, deletePost, whoami } from "./metricool.mjs";
 
 const cfg = JSON.parse(fs.readFileSync("config.json", "utf8"));
 const args = Object.fromEntries(process.argv.slice(2).map((a) => { const [k, v] = a.replace(/^--/, "").split("="); return [k, v ?? true]; }));
@@ -100,6 +100,10 @@ async function main() {
     const when = stamp(nowLocal(Date.now() + 86400000 * 2));
     const url = `https://raw.githubusercontent.com/${process.env.GITHUB_REPOSITORY}/${process.env.GITHUB_REF_NAME || "main"}/assets/logos/color/icono_logotipo.png`;
     summary(`🔎 CHECK: probando Metricool (blogId ${process.env.METRICOOL_BLOG_ID || "FALTA"}, userId ${process.env.METRICOOL_USER_ID || "FALTA"}, token ${process.env.METRICOOL_TOKEN ? "cargado" : "FALTA"})…`);
+    const tk = (process.env.METRICOOL_TOKEN || "").trim();
+    summary(`🔑 El token tiene ${tk.length} caracteres${/^["']|["']$/.test(tk) ? " (¡trae comillas!)" : ""} y ${/\s/.test(process.env.METRICOOL_TOKEN || "") ? "traía espacios o saltos de línea (los quito)" : "no trae espacios"}.`);
+    try { summary("✅ Autenticación OK. Marcas de la cuenta: " + (await whoami()).join(" · ")); }
+    catch (e) { summary("❌ Falló la autenticación: " + String(e.message).slice(0, 400)); throw new Error("El token o el userId no son válidos para la API de Metricool."); }
     const p = await createPost({ imageUrl: url, type: "STORY", when, timezone: TZ, draft: true });
     console.log("Borrador de prueba creado, id:", p.id);
     if (p.id) { await deletePost(p.id); summary("✅ CHECK OK: el token de Metricool funciona (se creó un borrador de prueba y se borró)."); }

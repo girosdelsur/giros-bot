@@ -3,12 +3,13 @@
 const BASE = "https://app.metricool.com/api";
 
 function env(name) {
-  const v = process.env[name];
+  // quita espacios, saltos de línea y comillas que se cuelan al pegar el secreto
+  const v = (process.env[name] ?? "").trim().replace(/^["']|["']$/g, "").trim();
   if (!v) throw new Error(`Falta el secreto ${name} (GitHub → Settings → Secrets and variables → Actions)`);
   return v;
 }
 
-async function mc(pathname, { method = "GET", query = {}, body } = {}) {
+export async function mc(pathname, { method = "GET", query = {}, body } = {}) {
   const q = new URLSearchParams({ userId: env("METRICOOL_USER_ID"), blogId: env("METRICOOL_BLOG_ID"), ...query });
   const res = await fetch(`${BASE}${pathname}?${q}`, {
     method,
@@ -60,4 +61,11 @@ export async function createPost({ imageUrl, type, when, timezone, text = "", dr
 
 export async function deletePost(id) {
   return mc(`/v2/scheduler/posts/${id}`, { method: "DELETE" });
+}
+
+// Comprueba solo la autenticación (sin crear nada): lista las marcas de la cuenta
+export async function whoami() {
+  const r = await mc("/admin/simpleProfiles");
+  const list = Array.isArray(r) ? r : r?.data ?? [];
+  return list.map((b) => `${b.id ?? b.blogId} ${b.label ?? b.name ?? ""}`.trim());
 }
