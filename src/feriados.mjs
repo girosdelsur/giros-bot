@@ -13,6 +13,9 @@ export const FERIADOS = [
   { date: "2026-10-31", dia: "Sábado 31 de octubre", nombre: "Día de las Iglesias Evangélicas y Protestantes", titulo: "Día de las Iglesias **Evangélicas y Protestantes**", horario: "08:30 a 16:00", cierre: "16:00", photo: "fer_portal-wittenberg", pos: "50% 50%",
     motivo: "Se recuerda el inicio de la Reforma Protestante en 1517 y se reconoce el aporte de las iglesias evangélicas y protestantes y la libertad de culto.",
     texto: "Se conmemora cada 31 de octubre porque ese día de 1517 Martín Lutero dio inicio a la Reforma Protestante. El feriado se instituyó con la Ley 20.299 (2008) para reconocer el aporte social, espiritual y cultural de las iglesias evangélicas y protestantes, y la libertad de culto.", emoji: "🙏" },
+  { date: "2026-12-08", dia: "Martes 8 de diciembre", nombre: "Inmaculada Concepción", titulo: "Inmaculada **Concepción**", horario: "08:30 a 20:00", cierre: "20:00", photo: "fer_inmaculada", pos: "50% 30%",
+    motivo: "Se celebra la Inmaculada Concepción de la Virgen María, una fiesta religiosa del calendario católico que en Chile es feriado.",
+    texto: "Se celebra la Inmaculada Concepción de la Virgen María, una fiesta religiosa del calendario católico que en Chile es feriado cada 8 de diciembre.", emoji: "🕊️" },
 ];
 
 const cal = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B9E07E"/><stop offset=".55" stop-color="#90C149"/><stop offset="1" stop-color="#5F8A22"/></linearGradient><linearGradient id="cf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6A80"/><stop offset="1" stop-color="#2A3442"/></linearGradient></defs>
