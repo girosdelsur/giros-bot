@@ -15,6 +15,7 @@ import { createPost, deletePost, whoami } from "./metricool.mjs";
 const cfg = JSON.parse(fs.readFileSync("config.json", "utf8"));
 const args = Object.fromEntries(process.argv.slice(2).map((a) => { const [k, v] = a.replace(/^--/, "").split("="); return [k, v ?? true]; }));
 const DRY = !!args.dry || process.env.DRY_RUN === "true";
+const DRAFT = !!args.draft; // prueba completa: genera, sube la imagen y crea BORRADORES en Metricool (que luego borra); no publica nada
 const FORCE_HOUR = args.hour ?? (process.env.FORCE_HOUR || undefined);
 const FORCE_DATE = args.date ?? (process.env.FORCE_DATE || undefined);
 const forced = FORCE_HOUR !== undefined || FORCE_DATE !== undefined;
@@ -114,10 +115,10 @@ async function main() {
   if (!slot) { summary(`ℹ️ Hora de Chile ${now.date} ${pad(now.h)}:${pad(now.mi)} (día ${weekday}): no hay publicación programada. No se hizo nada.`); return; }
   if (!forced && now.mi > cfg.maxLateMinutes) { summary(`⏭️ Llegué tarde (minuto ${now.mi}). Salto esta hora para no desordenar.`); return; }
   if (!DRY && !process.env.METRICOOL_TOKEN) { summary("⏸️ Aún no hay METRICOOL_TOKEN configurado: el bot está en pausa (no genera ni publica nada)."); return; }
-  const key = `${now.date}_${pad(slot.hour)}`;
+  const key = `${DRAFT ? "prueba_" : ""}${now.date}_${pad(slot.hour)}`;
   const statePath = "state/published.json";
   const state = fs.existsSync(statePath) ? JSON.parse(fs.readFileSync(statePath, "utf8")) : {};
-  if (state[key] && !DRY) { console.log("Ya publicado:", key); return; }
+  if (state[key] && !DRY && !DRAFT) { console.log("Ya publicado:", key); return; }
 
   const { x, tplKey, feed } = await buildContext();
   const storyFile = `${key}_${slot.corridor}_story.jpg`;
@@ -134,6 +135,7 @@ async function main() {
   gitPush(`imágenes ${key}`);
   const when = stamp(nowLocal(Date.now() + cfg.publishDelayMinutes * 60000));
   const result = {};
+  const drafts = [];
   for (const f of files) {
     const url = rawUrl(f.file);
     await waitPublic(url);
@@ -141,14 +143,20 @@ async function main() {
     const nets = cfg.networks?.[f.kind === "STORY" ? "story" : "post"] ?? ["instagram"];
     for (const network of nets) {
       try {
-        const p = await createPost({ imageUrl: url, type: f.kind, when, timezone: TZ, text: f.text || "", network });
+        const p = await createPost({ imageUrl: url, type: f.kind, when, timezone: TZ, text: f.text || "", network, draft: DRAFT });
         result[`${f.kind.toLowerCase()}_${network}`] = p.id ?? "ok";
-        summary(`✅ Programado ${f.kind} en ${network} (${slot.corridor}, tasa de las ${x.hh}: ${x.cur}) para ${when} · id Metricool ${p.id}`);
+        if (DRAFT && p.id) drafts.push(p.id);
+        summary(`${DRAFT ? "🧪 BORRADOR de prueba" : "✅ Programado"} ${f.kind} en ${network} (${slot.corridor}, tasa de las ${x.hh}: ${x.cur}) para ${when} · id Metricool ${p.id}`);
       } catch (e) {
         if (network === "instagram") throw e;
         summary(`⚠️ ${f.kind} en ${network} no se pudo programar: ${e.message.slice(0, 300)}`);
       }
     }
+  }
+  if (DRAFT) {
+    for (const id of drafts) await deletePost(id).catch((e) => summary("⚠️ No pude borrar el borrador " + id + ": " + e.message.slice(0, 200)));
+    summary(`✅ PRUEBA COMPLETA OK: se generó la pieza, quedó pública en GitHub y Metricool aceptó ${drafts.length} borrador(es) (ya borrados). No se publicó nada.`);
+    return;
   }
   state[key] = { ...result, at: new Date().toISOString() };
   fs.mkdirSync("state", { recursive: true });

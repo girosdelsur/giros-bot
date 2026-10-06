@@ -12,9 +12,9 @@ on:
   workflow_dispatch:
     inputs:
       modo:
-        description: "vista-previa = genera todas las plantillas (no publica) · check = prueba el token de Metricool · publicar = publica de verdad"
+        description: "vista-previa = genera todas las plantillas (no publica) · check = prueba el token de Metricool · borrador = prueba completa con borradores (no publica) · publicar = publica de verdad"
         type: choice
-        options: [vista-previa, check, publicar]
+        options: [vista-previa, check, borrador, publicar]
         default: vista-previa
       hora:
         description: "(opcional) forzar hora de Chile 0-23, solo para modo publicar"
@@ -81,6 +81,7 @@ jobs:
           case "$MODO" in
             vista-previa) node src/preview.mjs ;;
             check)        node src/run.mjs --check ;;
+            borrador)     node src/run.mjs --draft ;;
             *)            node src/run.mjs ;;
           esac
 
