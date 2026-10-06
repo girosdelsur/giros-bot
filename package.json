@@ -1,0 +1,13 @@
+{
+  "name": "giros-bot",
+  "private": true,
+  "type": "module",
+  "description": "Publica automáticamente las historias y el post de tasa de Giros del Sur (datos reales de api.girosdelsur.com) vía Metricool",
+  "scripts": {
+    "preview": "node src/run.mjs --dry --preview",
+    "dry": "node src/run.mjs --dry"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}

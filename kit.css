@@ -1,0 +1,28 @@
+/* giros-social · kit.css — sistema visual Giros del Sur (feed 1080x1350 y story 1080x1920) */
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat-ExtraBold.ttf");font-weight:800}
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat-Black.ttf");font-weight:900}
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat-Bold.ttf");font-weight:700}
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat-SemiBold.ttf");font-weight:600}
+@font-face{font-family:"Sauce";src:url("assets/fonts/OpenSauceSans-Regular.ttf");font-weight:400}
+@font-face{font-family:"Sauce";src:url("assets/fonts/OpenSauceSans-Medium.ttf");font-weight:500}
+@font-face{font-family:"Sauce";src:url("assets/fonts/OpenSauceSans-SemiBold.ttf");font-weight:600}
+@font-face{font-family:"Sauce";src:url("assets/fonts/OpenSauceSans-Bold.ttf");font-weight:700}
+
+:root{
+  --green:#90C149; --green-d:#6f9a30; --green-l:#b6dc7a; --gray:#777776; --grafito:#3C4858;
+  --cream:#F3EFE6; --cream-d:#E6E0D2; --white:#fff;
+  --pad:88px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow:hidden;font-family:"Sauce","Arial",sans-serif;color:var(--grafito)}
+body.feed{width:1080px;height:1350px}
+body.story{width:1080px;height:1920px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow:hidden;font-family:"Sauce","Arial",sans-serif;color:var(--grafito)}
+#root{position:relative;overflow:hidden}
+body.story,body.story #root{width:1080px;height:1920px}
+body.feed,body.feed #root{width:1080px;height:1350px}
+.m{font-family:"Montserrat","Arial",sans-serif}
+.abs{position:absolute}
+.ico{position:absolute;filter:drop-shadow(0 26px 30px rgba(60,72,88,.28))}
+.ico svg{width:100%;height:100%;display:block}

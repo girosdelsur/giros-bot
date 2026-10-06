@@ -1,0 +1,9 @@
+node_modules/
+page.html
+preview/
+.DS_Store
+demos/
+tools/
+src/_sheet.mjs
+sheets/
+tools/
