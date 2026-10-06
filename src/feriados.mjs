@@ -21,6 +21,9 @@ const cal = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs
 <path d="M62 124 l26 26 52-58" stroke="#90C149" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const calIcon = (style) => `<div class="ico" style="${style}">${cal}</div>`;
 
+// Domingo 1 de noviembre (Todos los Santos): feriado en que NO operamos; se avisa que volvemos el lunes 2 a las 8:30
+export const DOMINGO = { date: "2026-11-01", dia: "Domingo 1 de noviembre", titulo: "Día de **Todos los Santos**" };
+
 const page = (w, h, cls, inner) => `<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=${w},height=${h}"><link rel="stylesheet" href="kit.css"></head><body class="${cls}"><div id="root">${inner}</div></body></html>`;
 const foot = (dark) => `<div class="m abs" style="left:80px;right:80px;bottom:60px;display:flex;justify-content:space-between;font-weight:700;font-size:26px;color:${dark ? "rgba(255,255,255,.88)" : "var(--gray)"}"><span>@girosdelsur</span><span>girosdelsur.com</span></div>`;
 const hoursPill = (f, bg, color) => `<span class="m" style="display:inline-block;background:${bg};color:${color};font-weight:800;font-size:40px;padding:22px 40px;border-radius:999px;box-shadow:0 14px 34px rgba(44,54,68,.28)">Atendemos de ${f.horario}</span>`;
@@ -60,6 +63,27 @@ function storyMediodia(f) {
   ${icon("check", "right:50px;top:1090px;width:210px;height:210px")}
   <div class="abs" style="left:80px;bottom:340px">${cta("ENVÍA EN GIROSDELSUR.COM", "var(--grafito)")}</div>
   ${foot(false)}`);
+}
+
+// Historia del domingo feriado: descansamos, volvemos el lunes 2 a las 08:30 (azul grafito)
+function storyDomingo(f) {
+  return page(1080, 1920, "story", `${bgGraf}
+  ${orb("right:-220px;top:-160px;width:720px;height:720px;background:rgba(144,193,73,.16)")}
+  ${orb("left:-260px;bottom:260px;width:660px;height:660px;background:rgba(144,193,73,.1)")}
+  ${logo("white-t", 70, "left:50%;top:84px;transform:translateX(-50%)")}
+  <div class="abs" style="left:80px;right:80px;top:330px">
+    <span class="m" style="display:inline-block;background:var(--green);color:#fff;font-weight:800;font-size:34px;letter-spacing:.1em;padding:14px 32px;border-radius:999px">FERIADO EN CHILE</span>
+    <div class="m" style="font-weight:700;font-size:40px;color:var(--green-l);margin-top:34px">${f.dia}</div>
+    <div class="m" style="font-weight:800;font-size:112px;line-height:1.05;letter-spacing:-.02em;color:#fff;margin-top:26px">${hl(f.titulo, "var(--green)")}</div>
+  </div>
+  <div class="abs" style="left:80px;right:80px;top:880px;font-weight:600;font-size:56px;line-height:1.2;color:#fff">Hoy <b class="m" style="font-weight:800;color:var(--green)">descansamos</b></div>
+  <div class="abs" style="left:80px;right:80px;top:1040px">
+    <div style="font-weight:500;font-size:44px;line-height:1.3;color:rgba(255,255,255,.92)">Retomamos el lunes 2 de noviembre desde las 08:30.</div>
+    <div style="margin-top:40px"><span class="m" style="display:inline-block;background:#fff;color:var(--grafito);font-weight:800;font-size:40px;padding:22px 40px;border-radius:999px;box-shadow:0 14px 34px rgba(0,0,0,.28)">Volvemos lunes 08:30</span></div>
+  </div>
+  ${calIcon("right:50px;top:1230px;width:230px;height:230px;transform:rotate(6deg)")}
+  <div class="abs" style="left:80px;bottom:330px">${cta("COTIZA EN GIROSDELSUR.COM", "var(--green)")}</div>
+  ${foot(true)}`);
 }
 
 // Post de feed — aviso del feriado con foto
@@ -103,5 +127,7 @@ if (process.argv[1]?.endsWith("feriados.mjs")) {
     await renderPage(feed(f), { width: 1080, height: 1350, out: `content/feriados/${f.date}_feed.jpg` });
     console.log("ok", f.date);
   }
+  await renderPage(storyDomingo(DOMINGO), { width: 1080, height: 1920, out: `content/feriados/${DOMINGO.date}_story-domingo.jpg` });
+  console.log("ok", DOMINGO.date);
   await closeBrowser();
 }
