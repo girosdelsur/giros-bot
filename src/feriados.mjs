@@ -7,8 +7,12 @@ const { logo, cta, kicker, hl, orb, bgGreen, bgCream, bgGraf, icon, photo } = H;
 
 // Datos verificados: feriados oficiales de Chile 2026 (12-oct lunes, 31-oct sábado). Horario de Giros del Sur: L–V 08:30–20:00, sáb 08:30–16:00.
 export const FERIADOS = [
-  { date: "2026-10-12", dia: "Lunes 12 de octubre", nombre: "Encuentro de Dos Mundos", titulo: "Encuentro de **Dos Mundos**", horario: "08:30 a 20:00", cierre: "20:00", photo: "w_banca-llamada", pos: "50% 25%" },
-  { date: "2026-10-31", dia: "Sábado 31 de octubre", nombre: "Día de las Iglesias Evangélicas y Protestantes", titulo: "Día de las Iglesias **Evangélicas y Protestantes**", horario: "08:30 a 16:00", cierre: "16:00", photo: "m_feriado-sonrisa", pos: "50% 22%" },
+  { date: "2026-10-12", dia: "Lunes 12 de octubre", nombre: "Encuentro de Dos Mundos", titulo: "Encuentro de **Dos Mundos**", horario: "08:30 a 20:00", cierre: "20:00", photo: "fer_barco-atardecer", pos: "50% 45%",
+    motivo: "Se recuerda el encuentro entre Europa y América de 1492. Hoy es una fecha para reflexionar sobre la diversidad cultural y los pueblos indígenas.",
+    texto: "Se recuerda el encuentro entre Europa y América, que comenzó con la llegada de Cristóbal Colón el 12 de octubre de 1492. Antes se llamaba Día de la Raza; hoy es una fecha para reflexionar sobre la diversidad cultural y los pueblos indígenas.", emoji: "🌎" },
+  { date: "2026-10-31", dia: "Sábado 31 de octubre", nombre: "Día de las Iglesias Evangélicas y Protestantes", titulo: "Día de las Iglesias **Evangélicas y Protestantes**", horario: "08:30 a 16:00", cierre: "16:00", photo: "fer_portal-wittenberg", pos: "50% 50%",
+    motivo: "Se recuerda el inicio de la Reforma Protestante en 1517 y se reconoce el aporte de las iglesias evangélicas y protestantes y la libertad de culto.",
+    texto: "Se conmemora cada 31 de octubre porque ese día de 1517 Martín Lutero dio inicio a la Reforma Protestante. El feriado se instituyó con la Ley 20.299 (2008) para reconocer el aporte social, espiritual y cultural de las iglesias evangélicas y protestantes, y la libertad de culto.", emoji: "🙏" },
 ];
 
 const cal = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B9E07E"/><stop offset=".55" stop-color="#90C149"/><stop offset="1" stop-color="#5F8A22"/></linearGradient><linearGradient id="cf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5B6A80"/><stop offset="1" stop-color="#2A3442"/></linearGradient></defs>
@@ -33,11 +37,12 @@ function storyApertura(f) {
     <div class="m" style="font-weight:700;font-size:40px;color:#fff;margin-top:34px">${f.dia}</div>
     <div class="m" style="font-weight:800;font-size:${big(f)}px;line-height:1.05;letter-spacing:-.02em;color:#fff;margin-top:26px">${hl(f.titulo, "var(--grafito)")}</div>
   </div>
-  <div class="abs" style="left:80px;right:80px;top:1010px">
+  <div class="abs" style="left:80px;right:80px;top:800px;font-weight:500;font-size:38px;line-height:1.36;color:#fff">${f.motivo}</div>
+  <div class="abs" style="left:80px;right:80px;top:1075px">
     <div style="font-weight:600;font-size:56px;line-height:1.2;color:#fff">Hoy <b class="m" style="font-weight:800;color:var(--grafito)">trabajamos con normalidad</b></div>
     <div style="margin-top:44px">${hoursPill(f, "#fff", "var(--grafito)")}</div>
   </div>
-  ${calIcon("right:50px;top:1010px;width:230px;height:230px;transform:rotate(6deg)")}
+  ${calIcon("right:50px;top:1075px;width:230px;height:230px;transform:rotate(6deg)")}
   <div class="abs" style="left:80px;bottom:330px">${cta("COTIZA EN GIROSDELSUR.COM", "#fff", "var(--grafito)")}</div>
   ${foot(true)}`);
 }
@@ -75,12 +80,16 @@ function feed(f) {
       <div style="font-weight:600;font-size:34px;color:var(--grafito);margin-top:10px">Atendemos de ${f.horario}</div>
     </div>
   </div>
-  <div class="abs" style="left:70px;right:70px;top:1040px;text-align:center">${cta("COTIZA EN GIROSDELSUR.COM", "var(--green)")}</div>
+  <div class="abs" style="left:64px;right:64px;top:948px;text-align:center;font-weight:500;font-size:28px;line-height:1.36;color:rgba(255,255,255,.92)">${f.motivo}</div>
+  <div class="abs" style="left:70px;right:70px;top:1100px;text-align:center">${cta("COTIZA EN GIROSDELSUR.COM", "var(--green)")}</div>
   <div class="m abs" style="left:80px;right:80px;bottom:34px;display:flex;justify-content:space-between;font-weight:700;font-size:24px;color:rgba(255,255,255,.85)"><span>@girosdelsur</span><span>girosdelsur.com</span></div>`);
 }
 
-export const captionFeriado = (f) => `Hoy ${f.dia.toLowerCase()} es feriado en Chile por el ${f.nombre}, pero en Giros del Sur trabajamos con normalidad 💚
+export const captionFeriado = (f) => `Hoy ${f.dia.toLowerCase()} es feriado en Chile: ${f.nombre} ${f.emoji}
 
+${f.texto}
+
+En Giros del Sur trabajamos con normalidad 💚
 🕗 Atendemos de ${f.horario}.
 
 👉 Cotiza y envía en girosdelsur.com
