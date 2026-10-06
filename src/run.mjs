@@ -99,6 +99,7 @@ async function main() {
   if (args.check) {
     const when = stamp(nowLocal(Date.now() + 86400000 * 2));
     const url = `https://raw.githubusercontent.com/${process.env.GITHUB_REPOSITORY}/${process.env.GITHUB_REF_NAME || "main"}/assets/logos/color/icono_logotipo.png`;
+    summary(`🔎 CHECK: probando Metricool (blogId ${process.env.METRICOOL_BLOG_ID || "FALTA"}, userId ${process.env.METRICOOL_USER_ID || "FALTA"}, token ${process.env.METRICOOL_TOKEN ? "cargado" : "FALTA"})…`);
     const p = await createPost({ imageUrl: url, type: "STORY", when, timezone: TZ, draft: true });
     console.log("Borrador de prueba creado, id:", p.id);
     if (p.id) { await deletePost(p.id); summary("✅ CHECK OK: el token de Metricool funciona (se creó un borrador de prueba y se borró)."); }
@@ -152,4 +153,4 @@ async function main() {
   gitPush(`estado ${key}`);
 }
 
-try { await main(); } catch (e) { console.error("ERROR:", e.message); process.exitCode = 1; } finally { await closeBrowser(); }
+try { await main(); } catch (e) { console.error("ERROR:", e.message); summary("❌ ERROR: " + String(e.message).slice(0, 900)); process.exitCode = 1; } finally { await closeBrowser(); }
