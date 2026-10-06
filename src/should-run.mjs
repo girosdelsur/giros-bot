@@ -12,7 +12,8 @@ const key = `${date}_${String(h).padStart(2, "0")}`;
 const state = fs.existsSync("state/published.json") ? JSON.parse(fs.readFileSync("state/published.json", "utf8")) : {};
 let go = true, why = "";
 if (!manual) {
-  if (!slot) { go = false; why = `no hay publicación a las ${h}:00 (día ${weekday})`; }
+  if ((cfg.closedDates ?? []).includes(date)) { go = false; why = `${date} es un día cerrado`; }
+  else if (!slot) { go = false; why = `no hay publicación a las ${h}:00 (día ${weekday})`; }
   else if (mi > cfg.maxLateMinutes) { go = false; why = `llegué tarde (minuto ${mi})`; }
   else if (state[key]) { go = false; why = `${key} ya estaba publicada`; }
   else if (!process.env.METRICOOL_TOKEN) { go = false; why = "falta METRICOOL_TOKEN (bot en pausa)"; }

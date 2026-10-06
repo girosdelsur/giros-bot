@@ -112,6 +112,7 @@ async function main() {
     return;
   }
 
+  if ((cfg.closedDates ?? []).includes(now.date) && !FORCE_DATE) { summary(`🚫 ${now.date} es un día cerrado (config.json → closedDates): no se publica la tasa.`); return; }
   if (!slot) { summary(`ℹ️ Hora de Chile ${now.date} ${pad(now.h)}:${pad(now.mi)} (día ${weekday}): no hay publicación programada. No se hizo nada.`); return; }
   if (!forced && now.mi > cfg.maxLateMinutes) { summary(`⏭️ Llegué tarde (minuto ${now.mi}). Salto esta hora para no desordenar.`); return; }
   if (!DRY && !process.env.METRICOOL_TOKEN) { summary("⏸️ Aún no hay METRICOOL_TOKEN configurado: el bot está en pausa (no genera ni publica nada)."); return; }
