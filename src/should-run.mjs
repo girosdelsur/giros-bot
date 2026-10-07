@@ -7,7 +7,8 @@ const parts = new Intl.DateTimeFormat("en-CA", { timeZone: cfg.timezone, hourCyc
 const o = Object.fromEntries(parts.map((p) => [p.type, p.value]));
 const h = +o.hour, mi = +o.minute, date = `${o.year}-${o.month}-${o.day}`;
 const weekday = new Date(Date.UTC(+o.year, +o.month - 1, +o.day)).getUTCDay();
-const slot = cfg.slots.find((s) => s.hour === h && s.days.includes(weekday));
+const ov = cfg.dayOverrides?.[date] ?? {};
+const slot = (ov.slots ?? cfg.slots.filter((s) => s.days.includes(weekday))).find((s) => s.hour === h);
 const key = `${date}_${String(h).padStart(2, "0")}`;
 const state = fs.existsSync("state/published.json") ? JSON.parse(fs.readFileSync("state/published.json", "utf8")) : {};
 let go = true, why = "";

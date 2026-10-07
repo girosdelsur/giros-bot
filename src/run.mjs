@@ -38,7 +38,8 @@ const weekday = new Date(Date.UTC(now.y, now.mo - 1, now.d)).getUTCDay(); // 0=d
 const dayOfYear = Math.floor((Date.UTC(now.y, now.mo - 1, now.d) - Date.UTC(now.y, 0, 0)) / 86400000);
 
 // slots del día (por día de la semana) y su posición entre las historias Chile→Venezuela
-const todaySlots = cfg.slots.filter((s) => s.days.includes(weekday));
+const ov = cfg.dayOverrides?.[now.date] ?? {}; // horarios especiales por fecha (cierre temprano, menos historias)
+const todaySlots = ov.slots ?? cfg.slots.filter((s) => s.days.includes(weekday));
 const slot = todaySlots.find((s) => s.hour === now.h);
 const bsIndex = slot ? todaySlots.filter((s) => s.corridor === "BS").findIndex((s) => s.hour === slot.hour) : -1;
 
@@ -58,7 +59,7 @@ async function buildContext() {
   // historias Chile→Venezuela: 4 plantillas de la familia del día (la 5.ª vuelve a la 1.ª con otra foto); corredores: plantilla de la familia
   const tplKey = slot.corridor === "BS" ? STORY_SETS[set][bsIndex % 4] : "c" + set;
   const photo = pickPhoto(tplKey, slot.corridor, slot.corridor === "BS" ? bsIndex / 4 : 0);
-  const x = { ...data, cor, set, photo: photo.file, pos: photo.pos, tip: tipFor(dayOfYear, bsIndex < 0 ? 0 : bsIndex), note: hoursNote(weekday, slot.hour), disclaimer: disclaimer(data.hh) };
+  const x = { ...data, cor, set, photo: photo.file, pos: photo.pos, tip: tipFor(dayOfYear, bsIndex < 0 ? 0 : bsIndex), note: hoursNote(weekday, slot.hour, ov.closing), disclaimer: disclaimer(data.hh) };
   let feed = null;
   if (slot.alsoFeed) {
     const fk = feedForWeekday[weekday];

@@ -301,7 +301,7 @@ function c1(x) {
     <div style="margin-top:16px">${kicker(`${dot}Tasa de las ${x.hh} · ${c.label}`, "var(--green-l)")}</div>
     <div class="m" style="font-weight:700;font-size:50px;margin-top:20px">${c.base === 1000 ? "1.000" : "1"} ${c.fromUnit} =</div>
     <div class="m" style="font-weight:900;font-size:150px;letter-spacing:-.03em;line-height:1;margin-top:2px">${rateFmt(c, x.cur)} <span style="color:var(--green)">${c.unit}</span></div>
-    <div style="font-weight:600;font-size:40px;margin-top:22px">Con <b class="m">${money(c, c.amounts[0])}</b> tu contacto recibe <b class="m" style="color:var(--green)">${conv(x, c.amounts[0])} ${c.unit}</b></div>
+    <div style="font-weight:600;font-size:36px;margin-top:22px">Con <b class="m">${money(c, c.amounts[0])}</b> tu contacto recibe <b class="m" style="color:var(--green)">${conv(x, c.amounts[0])} ${c.unit}</b></div>
     <div style="margin-top:20px">${badgeHTML(x.badge, "rgba(144,193,73,.22)", "#fff", "var(--green)")}</div>
   </div>
   <div class="abs" style="left:70px;top:1490px">${cta("COTIZAR AHORA", "var(--green)")}</div>

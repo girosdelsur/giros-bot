@@ -1,6 +1,7 @@
 // info.mjs — horarios reales de Giros del Sur y "datos" rotativos (sin promesas de velocidad ni comparaciones)
 // Horario: L–V 08:30–20:00 · sábado 08:30–16:00 · domingo cerrado. weekday: 0=domingo ... 6=sábado
-export function hoursNote(weekday, hour) {
+export function hoursNote(weekday, hour, closing) {
+  if (closing && weekday !== 0) return hour < 9 ? `Abrimos hoy a las 8:30 · atendemos hasta las ${closing}` : `Hoy atendemos hasta las ${closing}`;
   if (weekday === 0) return "Hoy domingo no operamos: retomamos el lunes desde las 8:30";
   if (weekday === 6) return hour < 9 ? "Abrimos hoy a las 8:30 · atendemos hasta las 16:00" : "Hoy atendemos hasta las 16:00";
   return hour < 9 ? "Abrimos hoy a las 8:30 · atendemos hasta las 20:00" : "Hoy atendemos hasta las 20:00";
