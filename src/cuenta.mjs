@@ -71,7 +71,7 @@ function feed(p) {
   ${icon("clock", "right:70px;top:46px;width:170px;height:170px;transform:rotate(8deg)")}
   <div class="abs" style="left:64px;right:64px;top:210px">
     <span class="m" style="display:inline-block;background:var(--green);color:#fff;font-weight:800;font-size:28px;letter-spacing:.1em;padding:12px 26px;border-radius:999px">${p.pill}</span>
-    <div class="m" style="font-weight:900;font-size:98px;line-height:1.02;letter-spacing:-.03em;color:#fff;margin-top:22px">${hl(p.titulo, "var(--green)")}</div>
+    <div class="m" style="font-weight:900;font-size:${p.size ?? 98}px;line-height:1.02;letter-spacing:-.03em;color:#fff;margin-top:22px">${hl(p.titulo, "var(--green)")}</div>
   </div>
   <div class="abs" style="left:56px;right:56px;top:665px;background:var(--cream);border-radius:44px;padding:36px 46px;box-shadow:0 24px 60px rgba(0,0,0,.4)">
     <div style="font-weight:700;font-size:30px;color:var(--green-d);letter-spacing:.06em" class="m">AHORA TRANSFIERE A</div>
@@ -100,11 +100,61 @@ export const PIEZAS = [
     caption: `🚨 ATENCIÓN: DEJA DE TRANSFERIR A BANCO ESTADO 🚨\n\nDesde hoy tus pagos van a la nueva cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista).\n\n⛔ Si sigues pagando a la cuenta de Banco Estado, tu envío se retrasará horas, incluso días.\n\n✅ ¿Dónde veo la cuenta nueva?\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Ahí aparecen las cuentas: copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Los datos solo aparecen en ese último paso, dentro de girosdelsur.com. Si te llegan por mensaje directo, desconfía.\n\n👉 Entra ahora a girosdelsur.com y paga a la cuenta correcta.\n\n${TAGS}` },
 ];
 
+// ───────── Fase 3: cuenta regresiva al cierre de la cuenta de Banco Estado (sábado 5-dic-2026) ─────────
+// Confirmado (27-oct): el 5-dic la cuenta deja de estar disponible. Lo que se transfiera ahí después NO llega a Giros del Sur: se gestiona con los nuevos
+// titulares de la cuenta y el envío queda pendiente hasta que el dinero vuelva a la cuenta Mercado Pago (no prometer que vuelve: "haremos las gestiones").
+const CIERRE = "2026-12-05";
+const diasHasta = (d) => Math.round((Date.UTC(2026, 11, 5) - Date.UTC(...d.split("-").map((x, i) => (i === 1 ? x - 1 : +x)))) / 864e5);
+
+function countdown(p) {
+  const T = THEMES[p.tema];
+  const word = typeof p.big === "string" && isNaN(p.big);
+  const bigSize = word ? (p.big.length > 4 ? 190 : 300) : 330;
+  const big = p.unit
+    ? `<div class="abs" style="left:80px;right:60px;top:380px;display:flex;align-items:baseline;gap:30px;color:${T.acc}"><span class="m" style="font-weight:900;font-size:${bigSize}px;line-height:1;letter-spacing:-.04em">${p.big}</span><span class="m" style="font-weight:900;font-size:112px;line-height:1;color:${T.ink}">${p.unit}</span></div>`
+    : `<div class="m abs" style="left:80px;right:60px;top:${p.big.length > 4 ? 450 : 400}px;font-weight:900;font-size:${bigSize}px;line-height:1;letter-spacing:-.04em;color:${T.acc};white-space:nowrap">${p.big}</div>`;
+  const tTop = p.unit ? 770 : (p.big.length > 4 ? 690 : 740);
+  return page(1080, 1920, "story", `${T.bg}
+  ${orb(`right:-220px;top:-160px;width:720px;height:720px;background:${T.orbs}`)}
+  ${orb(`left:-260px;bottom:260px;width:660px;height:660px;background:${T.orbs}`)}
+  ${logo(T.logo, 70, "left:50%;top:84px;transform:translateX(-50%)")}
+  <div class="abs" style="left:80px;top:290px"><span class="m" style="display:inline-block;background:${T.tag[0]};color:${T.tag[1]};font-weight:800;font-size:34px;letter-spacing:.1em;padding:14px 32px;border-radius:999px">${p.pill}</span></div>
+  ${big}
+  <div class="m abs" style="left:80px;right:80px;top:${tTop}px;font-weight:800;font-size:62px;line-height:1.1;letter-spacing:-.02em;color:${T.ink}">${hl(p.titulo, T.acc)}</div>
+  <div class="abs" style="left:80px;right:80px;top:${tTop + (p.unit ? 235 : 170)}px;font-weight:600;font-size:40px;line-height:1.3;color:${T.ink}">${p.texto}</div>
+  <div class="abs" style="left:80px;top:1390px">${pill(p.pildora, T.pill[0], T.pill[1])}</div>
+  ${icon(p.icono ?? "clock", "right:60px;top:1330px;width:220px;height:220px;transform:rotate(6deg)")}
+  <div class="abs" style="left:80px;bottom:300px">${cta("GIROSDELSUR.COM", T.cta[0], T.cta[1])}</div>
+  ${foot(T.foot)}`);
+}
+
+const NUEVA = "Cambia a la cuenta Mercado Pago que ves en el último paso de tu envío.";
+const countPieza = (date, extra = {}) => {
+  const n = diasHasta(date);
+  const base = n >= 3 ? { big: String(n), unit: "días", titulo: "para que la cuenta de **Banco Estado** deje de estar disponible", texto: `Un pago hecho ahí después del 5 de diciembre no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: n >= 10 ? "graf" : "green", pildora: "Cambia hoy" }
+    : n === 2 ? { big: "2", unit: "días", titulo: "y la cuenta de **Banco Estado** deja de estar disponible", texto: `El sábado 5 de diciembre. Un pago hecho ahí después no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia hoy" }
+    : n === 1 ? { big: "MAÑANA", unit: "", titulo: "deja de estar disponible la cuenta de **Banco Estado**", texto: `Si pagas ahí desde mañana, el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia ahora" }
+    : { big: "HOY", unit: "", titulo: "deja de estar disponible la cuenta de **Banco Estado**", texto: `No transfieras ahí: el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Paga a la cuenta nueva" };
+  return { id: `cuenta_fase3_story_${date}`, fase: "3-anterior", fecha: date, hora: "11:30", tipo: "count", pill: "CUENTA DE BANCO ESTADO", icono: "clock", ...base, ...extra };
+};
+
+export const FASE3 = [
+  ...["2026-11-04", "2026-11-11", "2026-11-18", "2026-11-25", "2026-12-01", "2026-12-03", "2026-12-04", "2026-12-05"].map((d) => countPieza(d)),
+  { id: "cuenta_fase3_story_2026-12-07", fase: "3-anterior", fecha: "2026-12-07", hora: "11:30", tipo: "story", tema: "cream", pill: "AVISO IMPORTANTE", sub: "Cuenta de Banco Estado", titulo: "Ya **no está disponible**", size: 112,
+    texto: "Si pagaste ahí, gestionaremos la devolución y te avisaremos. Tu envío queda pendiente hasta que el dinero vuelva. Paga siempre a la cuenta de Mercado Pago.", pildora: "Paga a la cuenta nueva", icono: "shield", textTop: 800 },
+  { id: "cuenta_fase3_feed_2026-11-20", fase: "3-anterior", fecha: "2026-11-20", hora: "11:30", tipo: "feed", size: 78, pill: `QUEDAN ${diasHasta("2026-11-20")} DÍAS`, titulo: "El **5 de diciembre** se cierra la cuenta de Banco Estado",
+    motivo: "Un pago hecho ahí después no llegará a Giros del Sur y tu envío quedará pendiente.",
+    caption: `⏳ QUEDAN ${diasHasta("2026-11-20")} DÍAS: el sábado 5 de diciembre la cuenta de Banco Estado deja de estar disponible.\n\n⛔ Un pago hecho ahí después de esa fecha no llegará a Giros del Sur y tu envío quedará pendiente.\n\n✅ Paga a la cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista). La ves en el último paso de tu envío:\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Copia los datos solo desde ese paso, dentro de girosdelsur.com.\n\n👉 Cambia hoy en girosdelsur.com\n\n${TAGS}` },
+  { id: "cuenta_fase3_feed_2026-12-03", fase: "3-anterior", fecha: "2026-12-03", hora: "11:30", tipo: "feed", size: 82, pill: "FALTAN 2 DÍAS", titulo: "El sábado **5** se cierra la cuenta de Banco Estado",
+    motivo: "Desde esa fecha, lo que pagues ahí no llegará a Giros del Sur y tu envío quedará pendiente.",
+    caption: `🛑 FALTAN 2 DÍAS: el sábado 5 de diciembre la cuenta de Banco Estado deja de estar disponible.\n\n⛔ Si pagas ahí desde esa fecha, el dinero no llegará a Giros del Sur y tu envío quedará pendiente mientras hacemos las gestiones para recuperarlo.\n\n✅ Paga a INVERSIONES DEL SUR SPA, Mercado Pago (Cuenta Vista). La encuentras en el último paso de tu envío en girosdelsur.com.\n\n🔒 Copia los datos solo desde ese paso. Desconfía de cuentas que te lleguen por mensaje directo.\n\n👉 Entra ahora a girosdelsur.com\n\n${TAGS}` },
+];
+
 if (process.argv[1]?.endsWith("cuenta.mjs")) {
-  for (const p of PIEZAS) {
+  for (const p of [...PIEZAS, ...FASE3]) {
     const out = `content/cuenta/${p.id}.jpg`;
     const isFeed = p.tipo === "feed";
-    const html = p.tipo === "pasos" ? pasos(p) : isFeed ? feed(p) : story(p);
+    const html = p.tipo === "pasos" ? pasos(p) : p.tipo === "count" ? countdown(p) : isFeed ? feed(p) : story(p);
     await renderPage(html, { width: 1080, height: isFeed ? 1350 : 1920, out });
     console.log("ok", p.id);
   }
