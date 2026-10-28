@@ -1,3 +1,4 @@
+// NOTA 28-oct: la cuenta antigua se nombra OPARMAQ SpA (Banco Estado) porque INVERSIONES DEL SUR SPA tendra pronto su propia cuenta Banco Estado; NO decir solo "Banco Estado".
 // cuenta.mjs — campaña "cambio de cuenta de pago" (Banco Estado/Oparmaq → Mercado Pago/INVERSIONES DEL SUR SPA). Tono AGRESIVO (pedido del usuario).
 // Uso: node src/cuenta.mjs  →  content/cuenta/<pieza>.jpg
 // REGLA: en redes NUNCA van RUT ni número de cuenta (protege contra estafas de falso cambio de cuenta).
@@ -88,16 +89,16 @@ const TAGS = "#GirosDelSur #Remesas #EnviarDinero #RemesasInternacionales #Migra
 
 // fase: "2-disponible" (día de salida) · "3-anterior" (recordatorio) · "s-seguridad" (refuerzo)
 export const PIEZAS = [
-  { id: "cuenta_story_1-deja-de-transferir", fase: "2-disponible", tipo: "story", tema: "green", pill: "URGENTE · CAMBIO DE CUENTA", sub: "Desde hoy", titulo: "Deja de transferir a **Banco Estado**", size: 104,
+  { id: "cuenta_story_1-deja-de-transferir", fase: "2-disponible", tipo: "story", tema: "green", pill: "URGENTE · CAMBIO DE CUENTA", sub: "Cuenta de Banco Estado · desde hoy", titulo: "Deja de transferir a **OPARMAQ SpA**", size: 110,
     texto: "Tu pago ahora va a la cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago. La ves en el último paso de tu envío.", pildora: "Cambia hoy", icono: "card" },
-  { id: "cuenta_story_2-retraso", fase: "2-disponible", tipo: "story", tema: "graf", pill: "NO LO HAGAS", sub: "Si pagas a la cuenta anterior", titulo: "Tu envío se **retrasará horas, incluso días**", size: 92,
+  { id: "cuenta_story_2-retraso", fase: "2-disponible", tipo: "story", tema: "graf", pill: "NO LO HAGAS", sub: "Si pagas a OPARMAQ SpA (Banco Estado)", titulo: "Tu envío se **retrasará horas, incluso días**", size: 92,
     texto: "Evítalo: paga a la cuenta nueva de Mercado Pago. Aparece en el último paso de tu operación.", pildora: "Usa la cuenta nueva", icono: "clock" },
   { id: "cuenta_story_3-pasos", fase: "2-disponible", tipo: "pasos", pill: "DÓNDE ESTÁ LA CUENTA", titulo: "Así llegas a la **cuenta correcta**" },
   { id: "cuenta_story_4-seguridad", fase: "s-seguridad", tipo: "story", tema: "cream", pill: "CUIDA TU DINERO", sub: "Antes de transferir", titulo: "Copia los datos **solo en el último paso**", size: 96,
     texto: "Las cuentas aparecen dentro de girosdelsur.com, al confirmar tu envío. Desconfía de cuentas que te lleguen por mensaje directo.", pildora: "Solo en tu envío", icono: "shield" },
-  { id: "cuenta_feed_1-deja-de-transferir", fase: "2-disponible", tipo: "feed", pill: "URGENTE", titulo: "**Deja de transferir** a Banco Estado",
-    motivo: "Si pagas a la cuenta anterior, tu envío se retrasará horas, incluso días.",
-    caption: `🚨 ATENCIÓN: DEJA DE TRANSFERIR A BANCO ESTADO 🚨\n\nDesde hoy tus pagos van a la nueva cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista).\n\n⛔ Si sigues pagando a la cuenta de Banco Estado, tu envío se retrasará horas, incluso días.\n\n✅ ¿Dónde veo la cuenta nueva?\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Ahí aparecen las cuentas: copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Los datos solo aparecen en ese último paso, dentro de girosdelsur.com. Si te llegan por mensaje directo, desconfía.\n\n👉 Entra ahora a girosdelsur.com y paga a la cuenta correcta.\n\n${TAGS}` },
+  { id: "cuenta_feed_1-deja-de-transferir", fase: "2-disponible", tipo: "feed", pill: "URGENTE", titulo: "**Deja de transferir** a la cuenta de OPARMAQ SpA", size: 80,
+    motivo: "Si pagas a OPARMAQ SpA (Banco Estado), tu envío se retrasará horas, incluso días.",
+    caption: `🚨 ATENCIÓN: DEJA DE TRANSFERIR A OPARMAQ SpA 🚨\n\nDesde hoy tus pagos van a la nueva cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista).\n\n⛔ Si sigues pagando a la cuenta de OPARMAQ SpA (Banco Estado), tu envío se retrasará horas, incluso días.\n\n✅ ¿Dónde veo la cuenta nueva?\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Ahí aparecen las cuentas: copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Los datos solo aparecen en ese último paso, dentro de girosdelsur.com. Si te llegan por mensaje directo, desconfía.\n\n👉 Entra ahora a girosdelsur.com y paga a la cuenta correcta.\n\n${TAGS}` },
 ];
 
 // ───────── Fase 3: cuenta regresiva al cierre de la cuenta de Banco Estado (sábado 5-dic-2026) ─────────
@@ -131,28 +132,28 @@ function countdown(p) {
 const NUEVA = "Cambia a la cuenta Mercado Pago que ves en el último paso de tu envío.";
 const countPieza = (date, extra = {}) => {
   const n = diasHasta(date);
-  const base = n >= 3 ? { big: String(n), unit: "días", titulo: "para que la cuenta de **Banco Estado** deje de estar disponible", texto: `Un pago hecho ahí después del 5 de diciembre no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: n >= 10 ? "graf" : "green", pildora: "Cambia hoy" }
-    : n === 2 ? { big: "2", unit: "días", titulo: "y la cuenta de **Banco Estado** deja de estar disponible", texto: `El sábado 5 de diciembre. Un pago hecho ahí después no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia hoy" }
-    : n === 1 ? { big: "MAÑANA", unit: "", titulo: "deja de estar disponible la cuenta de **Banco Estado**", texto: `Si pagas ahí desde mañana, el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia ahora" }
-    : { big: "HOY", unit: "", titulo: "deja de estar disponible la cuenta de **Banco Estado**", texto: `No transfieras ahí: el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Paga a la cuenta nueva" };
-  return { id: `cuenta_fase3_story_${date}`, fase: "3-anterior", fecha: date, hora: "11:30", tipo: "count", pill: "CUENTA DE BANCO ESTADO", icono: "clock", ...base, ...extra };
+  const base = n >= 3 ? { big: String(n), unit: "días", titulo: "para que la cuenta de **OPARMAQ SpA** deje de estar disponible", texto: `Un pago hecho a OPARMAQ SpA (Banco Estado) después del 5 de diciembre no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: n >= 10 ? "graf" : "green", pildora: "Cambia hoy" }
+    : n === 2 ? { big: "2", unit: "días", titulo: "y la cuenta de **OPARMAQ SpA** deja de estar disponible", texto: `El sábado 5 de diciembre. Un pago hecho a OPARMAQ SpA (Banco Estado) después no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia hoy" }
+    : n === 1 ? { big: "MAÑANA", unit: "", titulo: "deja de estar disponible la cuenta de **OPARMAQ SpA**", texto: `Si pagas a OPARMAQ SpA (Banco Estado) desde mañana, el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Cambia ahora" }
+    : { big: "HOY", unit: "", titulo: "deja de estar disponible la cuenta de **OPARMAQ SpA**", texto: `No transfieras a OPARMAQ SpA (Banco Estado): el dinero no llegará a Giros del Sur y tu envío quedará pendiente. ${NUEVA}`, tema: "green", pildora: "Paga a la cuenta nueva" };
+  return { id: `cuenta_fase3_story_${date}`, fase: "3-anterior", fecha: date, hora: "11:30", tipo: "count", pill: "OPARMAQ SpA · BANCO ESTADO", icono: "clock", ...base, ...extra };
 };
 
 export const FASE3 = [
   ...["2026-11-04", "2026-11-11", "2026-11-18", "2026-11-25", "2026-12-01", "2026-12-03", "2026-12-04", "2026-12-05"].map((d) => countPieza(d)),
-  { id: "cuenta_fase3_story_2026-12-07", fase: "3-anterior", fecha: "2026-12-07", hora: "11:30", tipo: "story", tema: "cream", pill: "AVISO IMPORTANTE", sub: "Cuenta de Banco Estado", titulo: "Ya **no está disponible**", size: 112,
-    texto: "Si pagaste ahí, gestionaremos la devolución y te avisaremos. Tu envío queda pendiente hasta que el dinero vuelva. Paga siempre a la cuenta de Mercado Pago.", pildora: "Paga a la cuenta nueva", icono: "shield", textTop: 800 },
-  { id: "cuenta_fase3_feed_2026-11-20", fase: "3-anterior", fecha: "2026-11-20", hora: "11:30", tipo: "feed", size: 78, pill: `QUEDAN ${diasHasta("2026-11-20")} DÍAS`, titulo: "El **5 de diciembre** se cierra la cuenta de Banco Estado",
-    motivo: "Un pago hecho ahí después no llegará a Giros del Sur y tu envío quedará pendiente.",
-    caption: `⏳ QUEDAN ${diasHasta("2026-11-20")} DÍAS: el sábado 5 de diciembre la cuenta de Banco Estado deja de estar disponible.\n\n⛔ Un pago hecho ahí después de esa fecha no llegará a Giros del Sur y tu envío quedará pendiente.\n\n✅ Paga a la cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista). La ves en el último paso de tu envío:\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Copia los datos solo desde ese paso, dentro de girosdelsur.com.\n\n👉 Cambia hoy en girosdelsur.com\n\n${TAGS}` },
-  { id: "cuenta_fase3_feed_2026-12-03", fase: "3-anterior", fecha: "2026-12-03", hora: "11:30", tipo: "feed", size: 82, pill: "FALTAN 2 DÍAS", titulo: "El sábado **5** se cierra la cuenta de Banco Estado",
-    motivo: "Desde esa fecha, lo que pagues ahí no llegará a Giros del Sur y tu envío quedará pendiente.",
-    caption: `🛑 FALTAN 2 DÍAS: el sábado 5 de diciembre la cuenta de Banco Estado deja de estar disponible.\n\n⛔ Si pagas ahí desde esa fecha, el dinero no llegará a Giros del Sur y tu envío quedará pendiente mientras hacemos las gestiones para recuperarlo.\n\n✅ Paga a INVERSIONES DEL SUR SPA, Mercado Pago (Cuenta Vista). La encuentras en el último paso de tu envío en girosdelsur.com.\n\n🔒 Copia los datos solo desde ese paso. Desconfía de cuentas que te lleguen por mensaje directo.\n\n👉 Entra ahora a girosdelsur.com\n\n${TAGS}` },
+  { id: "cuenta_fase3_story_2026-12-07", fase: "3-anterior", fecha: "2026-12-07", hora: "11:30", tipo: "story", tema: "cream", pill: "AVISO IMPORTANTE", sub: "Cuenta de OPARMAQ SpA (Banco Estado)", titulo: "Ya **no está disponible**", size: 112,
+    texto: "Si pagaste a OPARMAQ SpA, gestionaremos la devolución y te avisaremos. Tu envío queda pendiente hasta que el dinero vuelva. Paga siempre a la cuenta de Mercado Pago.", pildora: "Paga a la cuenta nueva", icono: "shield", textTop: 800 },
+  { id: "cuenta_fase3_feed_2026-11-20", fase: "3-anterior", fecha: "2026-11-20", hora: "11:30", tipo: "feed", size: 78, pill: `QUEDAN ${diasHasta("2026-11-20")} DÍAS`, titulo: "El **5 de diciembre** se cierra la cuenta de OPARMAQ SpA",
+    motivo: "Un pago hecho a OPARMAQ SpA (Banco Estado) después no llegará a Giros del Sur y tu envío quedará pendiente.",
+    caption: `⏳ QUEDAN ${diasHasta("2026-11-20")} DÍAS: el sábado 5 de diciembre la cuenta de OPARMAQ SpA (Banco Estado) deja de estar disponible.\n\n⛔ Un pago hecho a esa cuenta después de esa fecha no llegará a Giros del Sur y tu envío quedará pendiente.\n\n✅ Paga a la cuenta de INVERSIONES DEL SUR SPA, en Mercado Pago (Cuenta Vista). La ves en el último paso de tu envío:\n1️⃣ Pon el monto\n2️⃣ Elige o agrega a tu destinatario\n3️⃣ Confirma tu envío\n4️⃣ Copia los datos de Mercado Pago y adjunta tu comprobante\n\n🔒 Copia los datos solo desde ese paso, dentro de girosdelsur.com.\n\n👉 Cambia hoy en girosdelsur.com\n\n${TAGS}` },
+  { id: "cuenta_fase3_feed_2026-12-03", fase: "3-anterior", fecha: "2026-12-03", hora: "11:30", tipo: "feed", size: 82, pill: "FALTAN 2 DÍAS", titulo: "El sábado **5** se cierra la cuenta de OPARMAQ SpA",
+    motivo: "Desde esa fecha, lo que pagues a OPARMAQ SpA (Banco Estado) no llegará a Giros del Sur y tu envío quedará pendiente.",
+    caption: `🛑 FALTAN 2 DÍAS: el sábado 5 de diciembre la cuenta de OPARMAQ SpA (Banco Estado) deja de estar disponible.\n\n⛔ Si pagas a esa cuenta desde esa fecha, el dinero no llegará a Giros del Sur y tu envío quedará pendiente mientras hacemos las gestiones para recuperarlo.\n\n✅ Paga a INVERSIONES DEL SUR SPA, Mercado Pago (Cuenta Vista). La encuentras en el último paso de tu envío en girosdelsur.com.\n\n🔒 Copia los datos solo desde ese paso. Desconfía de cuentas que te lleguen por mensaje directo.\n\n👉 Entra ahora a girosdelsur.com\n\n${TAGS}` },
 ];
 
 if (process.argv[1]?.endsWith("cuenta.mjs")) {
   for (const p of [...PIEZAS, ...FASE3]) {
-    const out = `content/cuenta/${p.id}.jpg`;
+    const out = `content/cuenta-v2/${p.id}.jpg`;
     const isFeed = p.tipo === "feed";
     const html = p.tipo === "pasos" ? pasos(p) : p.tipo === "count" ? countdown(p) : isFeed ? feed(p) : story(p);
     await renderPage(html, { width: 1080, height: isFeed ? 1350 : 1920, out });
